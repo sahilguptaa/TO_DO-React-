@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/babel-standalone@6/babel.min.js"
+      crossorigin
+    ></script>
+    <title>To-Do</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            tasks: ["1", "1a", "12"],
+            input: ""
+          };
+        }
+
+        render() {
+          return (
+            <div>
+              <h1>Tasks</h1>
+              <ul>
+                {this.state.tasks.map((t, i) => (
+                  <li key={i}>
+                    {t}
+                    <button data-num={i} onClick={this.taskComplete}>
+                      X
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <p>No. of tasks left: {this.state.tasks.length}</p>
+              <div>
+                <input onChange={this.handleChange} value={this.state.input} />
+                <button onClick={this.addTask}>Add Task</button>
+              </div>
+            </div>
+          );
+        }
+        // Another way of taking the "index" from the button is wrapping the calling of the
+        // taskComplete function into another function and that's how we can pass 'i' into the
+        // taskComplete function.
+        //
+        // <button onClick={() => this.taskComplete(i)  }> X </button>
+        taskComplete = event => {
+          const t = event.target.dataset.num;
+          this.setState(state => {
+            state.tasks.splice(t, 1);
+            return {
+              tasks: state.tasks
+            };
+          });
+        };
+
+        // This or above one!!!
+
+        // taskComplete = i => {
+        //   this.setState(state => {
+        //     const tasks = [...state.tasks];
+        //     tasks.splice(i, 1);
+        //     return {
+        //       tasks: tasks
+        //     };
+        //   });
+        // };
+
+        // In the return part of the above commented function
+        // tasks: tasks
+        // can be written as
+        // tasks !!! (Some Javascript features. )
+
+        addTask = () => {
+          this.setState(state => ({
+            tasks: [...state.tasks, state.input],
+            input: ""
+          }));
+        };
+        handleChange = event => {
+          this.setState({
+            input: event.target.value
+          });
+        };
+      }
+      ReactDOM.render(<App />, document.querySelector("#app"));
+    </script>
+  </body>
+</html>
